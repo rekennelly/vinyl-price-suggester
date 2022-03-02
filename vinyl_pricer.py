@@ -1,8 +1,6 @@
 import requests
 import config
 
-BASE_URL = "https://api.discogs.com/"
-GRADES_DICT = {"M": "Mint (M)", "NM": "Near Mint (NM or M-)", "VG+": "Very Good Plus (VG+)", "VG": "Very Good (VG)", "G+": "Good Plus (G+)", "G": "Good (G)", "F": "Fair (F)", "P": "Poor (P)"}
 
 class Error(Exception):
    """Base class for other exceptions"""
@@ -27,8 +25,8 @@ def get_price_suggestion(release_id, record_grade):
 	Returns:
 	int: suggested price
 	"""
-	price_suggestions = requests.get(BASE_URL + "marketplace/price_suggestions/" + str(release_id), config.auth).json()
-	price_suggestions_key = GRADES_DICT[record_grade]
+	price_suggestions = requests.get(config.BASE_URL + "marketplace/price_suggestions/" + str(release_id), "&token=" + config.PERSONAL_TOKEN).json()
+	price_suggestions_key = config.GRADES_DICT[record_grade]
 	suggestion_dict = price_suggestions[price_suggestions_key]
 	suggested_price = suggestion_dict["value"]
 	suggestion_currency = suggestion_dict["currency"]
@@ -46,7 +44,7 @@ def get_release_info(release_id):
 	string: release name
 	list: list containing artist(s) name(s) as string
 	"""
-	release = requests.get(BASE_URL + "/releases/" + str(release_id), config.auth).json()
+	release = requests.get(config.BASE_URL + "/releases/" + str(release_id), "&token=" + config.PERSONAL_TOKEN).json()
 	release_name = release["title"]
 	artists = release["artists"]
 	release_artists = []
@@ -100,7 +98,7 @@ def main():
 	suggested_price, currency = get_price_suggestion(release_id, record_grade)
 	formatted_price_USD = "${:,.2f}".format(suggested_price)
 
-	print(f"Suggested price for {GRADES_DICT[record_grade]} copy of {release_name} — {release_artists}: {formatted_price_USD}")
+	print(f"Suggested price for {config.GRADES_DICT[record_grade]} copy of {release_name} — {release_artists}: {formatted_price_USD}")
 		
 
 main()
