@@ -1,5 +1,9 @@
 # vinyl-price-suggester
 
+This is a simple command line tool to generate a price suggestion for vinyl records using the Discogs API.
+
+When you input a Discogs Release ID and record grade, the program will print a suggested sales price for the specific record.
+
 To run this tool, create a file called **secret.py** in the vinyl_price_suggester directory containing the following:
 
 ```
